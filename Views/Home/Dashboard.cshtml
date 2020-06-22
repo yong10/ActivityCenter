@@ -1,0 +1,48 @@
+@model List<Plan>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>Dojo Activity Center</h1><br>
+        <h4><a href="new">Add a activity</a> | <a href="logout">Logout</a></h4>
+    </div>
+    <h3>Welcome, @ViewBag.User.FirstName</h3>
+    <div class="col-sm-12">
+        <table class="table table-striped">
+            <tr>
+                <th>Activity</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Corrdinator</th>
+                <th>No. of Particpants</th>
+                <th>Actions</th>
+            </tr>
+            @foreach(Plan p in Model)
+            {
+                <tr>
+                    <td><a href="/plan/@p.PlanId" >@p.Title</a></td>
+                    <td>@p.Date</td>
+                    <td>@p.Duration</td>
+                    <td>@p.Planner.FirstName</td>
+                    <td>@p.Guests.Count</td>
+                    <td>
+                        @if(ViewBag.User.UserId == p.Planner.UserId)
+                        {
+                            <a href="/delete/plan/@p.PlanId" class="btn btn-warning">Cancel</a>
+                        }
+                        else
+                        {
+                            if(p.Guests.Any(i => i.UserId == ViewBag.User.UserId))
+                            {
+                                <a asp-action="JoinOrLeave" asp-route-id="@p.PlanId" asp-route-status="leave" class="btn btn-warning">Leave</a>
+                            }
+                            else
+                            {
+                                <a asp-action="JoinOrLeave" asp-route-id="@p.PlanId" asp-route-status="join" class="btn btn-warning">Join</a>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

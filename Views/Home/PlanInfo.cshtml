@@ -1,0 +1,45 @@
+@model Plan
+@using CsharpBelt.Models;
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>@Model.Title</h1><br>
+        <h4><a asp-action="Dashboard">Dashboard</a> | <a asp-action="Logout">Logout</a></h4>
+    </div>
+    <div class="row">
+        <div class="col-sm-5">
+            <h3>Coordinator : @Model.Planner.FirstName</h3>
+            <h3>Description : @Model.Description</h3>
+            <h3>Date : @Model.Date</h3>
+            <h3>Duration : @Model.Duration</h3>
+            @if(ViewBag.User.UserId == Model.Planner.UserId)
+            {
+                <a href="/delete/plan/@Model.PlanId" class="btn btn-warning">Cancel</a>
+            }
+            else
+            {
+                if(Model.Guests.Any(i => i.UserId == ViewBag.User.UserId))
+                {
+                    <a asp-action="JoinOrLeave" asp-route-id="@Model.PlanId" asp-route-status="leave" class="btn btn-warning">Leave</a>
+                }
+                else
+                {
+                    <a asp-action="JoinOrLeave" asp-route-id="@Model.PlanId" asp-route-status="join" class="btn btn-warning">Join</a>
+                }
+            }
+        </div>
+        <div class="col-sm-4">
+            <ul class="list-unstyled">
+                <li><h3>Guest</h3>
+                    <ul>
+                        @foreach(var i in Model.Guests)
+                        {
+                        <li><h4>@i.User.FirstName</h4></li>
+                        }
+                    </ul>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
